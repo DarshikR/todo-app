@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export function TodoCard(props) {
-    const { todo, handleDeleteTodo, todoIndex, handleCompleteTodo, handleEditTodo, setIsEditing, isEnterPressed } = props
+    const { todo, handleDeleteTodo, todoIndex, handleCompleteTodo, setIsEditing, isEnterPressed, handleSaveEdit } = props
     const [isEditingCard, setIsEditingCard] = useState(false); // Local state for individual todo editing
     // const [isEditing, setIsEditing] = useState(false); // To toggle between view and edit mode
     const [newInput, setNewInput] = useState(todo.input); // Local state to hold the new value
@@ -29,6 +29,8 @@ export function TodoCard(props) {
                         </button>
                         <button onClick={() => {
                             handleDeleteTodo(todoIndex)
+                            setIsEditingCard(false); // Exit editing mode for this card
+                            setIsEditing(false); // Re-enable the TodoInput component
                         }}>
                             <h6>Delete</h6>
                         </button>
@@ -43,7 +45,7 @@ export function TodoCard(props) {
                             onChange={(e) => setNewInput(e.target.value)}
                             onKeyPress={(e) => {
                                 if (e.key === 'Enter') {
-                                    handleEditTodo(todoIndex, newInput); // Save edited value
+                                    handleSaveEdit(todoIndex, newInput); // Save edited value
                                     setIsEditingCard(false); // Exit editing mode for this card
                                     setIsEditing(false); // Re-enable the TodoInput component
                                 }
@@ -53,11 +55,14 @@ export function TodoCard(props) {
                     </div>
                     <div className="todo-buttons">
                         <button onClick={() => {
-                            handleEditTodo(todoIndex, newInput); // Save edited value
+                            handleSaveEdit(todoIndex, newInput); // Save edited value
                             setIsEditingCard(false); // Exit edit mode
                             setIsEditing(false); // Re-enable the TodoInput component
                         }}>Save</button>
-                        <button onClick={() => setIsEditingCard(false)}>Cancel</button>
+                        <button onClick={() => {
+                            setIsEditingCard(false); // Exit editing mode for this card
+                            setIsEditing(false); // Re-enable the TodoInput component
+                        }}>Cancel</button>
                     </div>
                 </>
             )}

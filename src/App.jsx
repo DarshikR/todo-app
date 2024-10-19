@@ -35,6 +35,14 @@ function App() {
     handleSaveData(newTodoList)
   }
 
+  function handleSaveEdit(index, newInput) {
+    // Only update the todo if the input is different from the original
+    if (newInput !== todos[index].input) {
+      handleEditTodo(index, newInput); // Call existing handleEditTodo
+    }
+    setIsEditing(false); // Reset editing state
+  }
+
   function handleCompleteTodo(index) {
     // update/edit/modify
     let newTodoList = [...todos]
@@ -95,8 +103,8 @@ function App() {
       <Tabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} todos={todos} />
       <TodoList
         handleCompleteTodo={handleCompleteTodo}
-        handleEditTodo={handleEditTodo}
-        setIsEditing={setIsEditing}  // Pass down setIsEditing
+        handleSaveEdit={handleSaveEdit}
+        setIsEditing={setIsEditing}
         handleDeleteTodo={handleDeleteTodo}
         selectedTab={selectedTab}
         todos={todos}
