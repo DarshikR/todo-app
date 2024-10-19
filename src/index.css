@@ -19,7 +19,7 @@ h1 {
 }
 
 .tab-container {
-  overflow-x: auto;
+  /* overflow-x: auto; */
 }
 
 .tab-button {
@@ -86,8 +86,9 @@ hr {
 }
 
 .todo-buttons button {
-  border: none !important;
   box-shadow: none !important;
+  color: var(--color-link);
+  border: 2px solid var(--color-link-transparent);
 }
 
 .todo-buttons button:hover {
@@ -98,6 +99,7 @@ hr {
 .todo-buttons button:first-of-type {
   /* color: #8aff80;
   background: rgba(138, 255, 128, .1); */
+  border: none !important;
   color: var(--background-primary);
   background: var(--color-link);
 }
@@ -105,6 +107,7 @@ hr {
 .todo-buttons button:last-of-type {
   /* color: #9580ff;
   background: rgba(149, 128, 255, .1); */
+  border: none !important;
   color: var(--color-link);
   background: var(--color-link-transparent);
 }
@@ -151,4 +154,41 @@ hr {
     justify-content: space-between;
     gap: 1rem;
   }
+}
+
+/* darshik */
+.for-pill {
+  width: 100%;
+  position: relative;
+}
+
+.pill {
+  position: absolute;
+  top: 14px;
+  right: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  white-space: nowrap;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.pill--key {
+  background: var(--color-link-transparent);
+  box-shadow: 0 2px 0 0 var(--border-secondary);
+  padding: .04rem .3rem 0;
+  color: var(--color-link);
+  font-weight: 600;
+  line-height: 1rem;
+  transition: .2s ease;
+}
+
+.pill--key-pressed {
+  box-shadow: 0 0 0 0 var(--border-secondary);
+  transform: translateY(2px);
+}
+
+.enter--key-pressed {
+  box-shadow: 0 0 0 0 var(--border-secondary);
+  transform: translate(2px, 2px);
 }

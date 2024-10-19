@@ -14,12 +14,23 @@ function App() {
   // ]
 
   const [todos, setTodos] = useState([
-    { input: 'Hello! Add your first todo!', complete: true }
+    { input: 'Hello! Add your first todo!', complete: true, isEdited: false }
   ])
   const [selectedTab, setSelectedTab] = useState('Open')
+  const [isEditing, setIsEditing] = useState(false); // Tracks if any todo is being edited
+
+  const [isEnterPressed, setIsEnterPressed] = useState(false); // To track Enter key press globally
 
   function handleAddTodo(newTodo) {
-    const newTodoList = [...todos, { input: newTodo, complete: false }]
+    const newTodoList = [...todos, { input: newTodo, complete: false, isEdited: false }]
+    setTodos(newTodoList)
+    handleSaveData(newTodoList)
+  }
+
+  function handleEditTodo(index, newInput) {
+    const newTodoList = [...todos];
+    newTodoList[index].input = newInput; // Update the todo's input value
+    newTodoList[index].isEdited = true; // Mark the todo as edited
     setTodos(newTodoList)
     handleSaveData(newTodoList)
   }
@@ -53,12 +64,44 @@ function App() {
     setTodos(db.todos)
   }, [])
 
+  // Add event listeners for keydown and keyup on mount and clean up on unmount
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Enter') {
+        setIsEnterPressed(true); // Set the state when "Enter" is pressed
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      if (e.key === 'Enter') {
+        setIsEnterPressed(false); // Reset the state when "Enter" is released
+      }
+    };
+
+    // Attach event listeners to the window object
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
+
+    // Clean up the event listeners when the component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
+    };
+  }, []); // Empty dependency array to run this effect only on mount/unmount
+
   return (
     <>
       <Header todos={todos} />
       <Tabs selectedTab={selectedTab} setSelectedTab={setSelectedTab} todos={todos} />
-      <TodoList handleCompleteTodo={handleCompleteTodo} handleDeleteTodo={handleDeleteTodo} selectedTab={selectedTab} todos={todos} />
-      <TodoInput handleAddTodo={handleAddTodo} />
+      <TodoList
+        handleCompleteTodo={handleCompleteTodo}
+        handleEditTodo={handleEditTodo}
+        setIsEditing={setIsEditing}  // Pass down setIsEditing
+        handleDeleteTodo={handleDeleteTodo}
+        selectedTab={selectedTab}
+        todos={todos}
+        isEnterPressed={isEnterPressed} />
+      <TodoInput handleAddTodo={handleAddTodo} isEditing={isEditing} isEnterPressed={isEnterPressed} />
     </>
   )
 }
