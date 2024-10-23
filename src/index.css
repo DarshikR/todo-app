@@ -40,6 +40,7 @@ h1 {
 
 .tab-selected {
   position: relative;
+  z-index: 1;
 }
 
 .tab-selected::after {
@@ -191,4 +192,10 @@ hr {
 .enter--key-pressed {
   box-shadow: 0 0 0 0 var(--border-secondary);
   transform: translate(2px, 2px);
+}
+
+@media (max-width: 768px) {
+  .pill{
+    display: none;
+  }
 }
