@@ -1,7 +1,7 @@
 import { TodoCard } from "./TodoCard";
 
 export function TodoList(props) {
-    const { todos, selectedTab, handleDeleteTodo, handleCompleteTodo, setIsEditing, isEnterPressed, handleSaveEdit } = props
+    const { todos, selectedTab, handleDeleteTodo, handleCompleteTodo, setIsEditing, isEnterPressed, handleSaveEdit, editInputRef, isSlashPressed } = props
 
     const filterTodosList = selectedTab === 'All' ?
         todos :

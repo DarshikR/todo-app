@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export function TodoInput(props) {
-    const { handleAddTodo, isEditing, isEnterPressed } = props;
+    const { handleAddTodo, isEditing, isEnterPressed, inputRef, isSlashPressed } = props;
     const [inputValue, setInputValue] = useState('');
     const [isFocused, setIsFocused] = useState(false); // Track input focus
 
@@ -9,11 +9,12 @@ export function TodoInput(props) {
         <div className="input-container">
             <div className="for-pill">
                 <input
+                    ref={inputRef}
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     onKeyPress={(e) => {
                         if (e.key === 'Enter') {
-                            if (!inputValue) {return}
+                            if (!inputValue) { return }
                             handleAddTodo(inputValue);
                             setInputValue('');
                         }
@@ -23,14 +24,20 @@ export function TodoInput(props) {
                     onFocus={() => setIsFocused(true)}  // Set focus state to true when input is focused
                     onBlur={() => setIsFocused(false)}   // Set focus state to false when input loses focus
                 />
-                <p className={`pill pill--key ${isEnterPressed ? 'pill--key-pressed' : ''}`}>
-                    Enter
-                </p>
+                {!isFocused ? (
+                    <p className={`pill pill--key ${isSlashPressed ? 'pill--key-pressed' : ''}`}>
+                        /
+                    </p>
+                ) : (
+                    <p className={`pill pill--key ${isEnterPressed ? 'pill--key-pressed' : ''}`}>
+                        Enter
+                    </p>
+                )}
             </div>
             <button
                 className={`${isFocused && isEnterPressed ? 'enter--key-pressed' : ''}`} // Apply class only when input is focused and Enter is pressed
                 onClick={() => {
-                    if (!inputValue) {return}
+                    if (!inputValue) { return }
                     handleAddTodo(inputValue);
                     setInputValue('');
                 }}

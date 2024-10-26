@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Header } from "./components/Header"
 import { Tabs } from "./components/Tabs"
 import { TodoInput } from "./components/TodoInput"
@@ -20,6 +20,9 @@ function App() {
   const [isEditing, setIsEditing] = useState(false); // Tracks if any todo is being edited
 
   const [isEnterPressed, setIsEnterPressed] = useState(false); // To track Enter key press globally
+  const [isSlashPressed, setIsSlashPressed] = useState(false); // To track Slash key press globally
+  const inputRef = useRef(null) // Ref to the input element in TodoInput
+  const editInputRef = useRef(null) // Ref to the input element in TodoInput
 
   function handleAddTodo(newTodo) {
     const newTodoList = [...todos, { input: newTodo, complete: false, isEdited: false }]
@@ -78,11 +81,26 @@ function App() {
       if (e.key === 'Enter') {
         setIsEnterPressed(true); // Set the state when "Enter" is pressed
       }
+      if (e.key === '/') {
+        // e.preventDefault() // Prevent default "/" behavior
+        // inputRef.current.focus() // Focus the input field
+        setIsSlashPressed(true); // Set the state when "Enter" is pressed
+      }
     };
 
     const handleKeyUp = (e) => {
       if (e.key === 'Enter') {
         setIsEnterPressed(false); // Reset the state when "Enter" is released
+      }
+      if (e.key === '/') {
+        e.preventDefault() // Prevent default "/" behavior
+        if (!isEditing && inputRef.current) {
+          inputRef.current.focus(); // Focus on TodoInput if it's not in edit mode
+        }
+        if (isEditing && inputRef.current) {
+          editInputRef.current.focus(); // Focus on TodoInput if it's not in edit mode
+        }
+        setIsSlashPressed(false); // Set the state when "Enter" is pressed
       }
     };
 
@@ -95,7 +113,7 @@ function App() {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
-  }, []); // Empty dependency array to run this effect only on mount/unmount
+  }, [isEditing]); // Empty dependency array to run this effect only on mount/unmount
 
   return (
     <>
@@ -108,8 +126,15 @@ function App() {
         handleDeleteTodo={handleDeleteTodo}
         selectedTab={selectedTab}
         todos={todos}
-        isEnterPressed={isEnterPressed} />
-      <TodoInput handleAddTodo={handleAddTodo} isEditing={isEditing} isEnterPressed={isEnterPressed} />
+        isEnterPressed={isEnterPressed}
+        editInputRef={editInputRef}
+        isSlashPressed={isSlashPressed} />
+      <TodoInput
+        handleAddTodo={handleAddTodo}
+        isEditing={isEditing}
+        isEnterPressed={isEnterPressed}
+        inputRef={inputRef}
+        isSlashPressed={isSlashPressed} />
     </>
   )
 }
